@@ -12,8 +12,6 @@ class AdminsController extends \yii\easyii\components\Controller
 
     public function actionIndex()
     {
-        echo "TEST";die();
-
         $data = new ActiveDataProvider([
             'query' => Admin::find()->desc(),
         ]);
