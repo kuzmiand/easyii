@@ -39,20 +39,20 @@ class AdminModule extends \yii\base\Module implements BootstrapInterface
         }
         $this->setModules($modules);
 
-        define('IS_ROOT',  !Yii::$app->user->isGuest && Yii::$app->user->identity->isRoot());
+        define('IS_ROOT',  true);
         define('LIVE_EDIT', !Yii::$app->user->isGuest && Yii::$app->session->get('easyii_live_edit'));
     }
 
 
     public function bootstrap($app)
     {
-        Yii::setAlias('easyii', '@vendor/noumo/easyii');
+        Yii::setAlias('easyii', '@vendor/kuzmiand/easyii');
 
-        if(!$app->user->isGuest && strpos($app->request->pathInfo, 'admin') === false) {
+        /*if(!$app->user->isGuest && strpos($app->request->pathInfo, 'admin') === false) {
             $app->on(Application::EVENT_BEFORE_REQUEST, function () use ($app) {
                 $app->getView()->on(View::EVENT_BEGIN_BODY, [$this, 'renderToolbar']);
             });
-        }
+        }*/
     }
 
     public function renderToolbar()

@@ -15,11 +15,12 @@ return [
                 'admin/<module:\w+>/<controller:\w+>/<action:[\w-]+>/<id:\d+>' => 'admin/<module>/<controller>/<action>'
             ],
          ],
-        'user' => [
+        /*'user' => [
             'identityClass' => 'yii\easyii\models\Admin',
+            //'identityClass' => 'budyaga\users\models\User',
             'enableAutoLogin' => true,
             'authTimeout' => 86400,
-        ],
+        ],*/
         'i18n' => [
             'translations' => [
                 'easyii' => [

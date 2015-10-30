@@ -20,51 +20,41 @@ $moduleName = $this->context->module->id;
 <body>
 <?php $this->beginBody() ?>
 <div id="admin-body">
-    <div style="width: auto; min-width: 1200px">
+    <div  style="width: auto; min-width: 1200px">
         <div class="wrapper">
             <div class="header">
                 <div class="logo">
                     <img src="<?= $asset->baseUrl ?>/img/logo_20.png">
-                    EasyiiCMS
+                    CASEXE CMS
                 </div>
                 <div class="nav">
                     <a href="<?= Url::to(['/']) ?>" class="pull-left"><i class="glyphicon glyphicon-home"></i> <?= Yii::t('easyii', 'Open site') ?></a>
-                    <a href="<?= Url::to(['/admin/sign/out']) ?>" class="pull-right"><i class="glyphicon glyphicon-log-out"></i> <?= Yii::t('easyii', 'Logout') ?></a>
+                    <?php if(!Yii::$app->user->isGuest) { ?>
+                        <a href="<?= Url::to(['/logout']) ?>" class="pull-right"><i class="glyphicon glyphicon-log-out"></i> <?= Yii::t('easyii', 'Logout') ?></a>
+                        <a href="<?= Url::to(['/user/admin/view', 'id'=>Yii::$app->user->id]) ?>" style="float: right; margin-right: 20px"><i class="glyphicon glyphicon-user"></i> <?= Yii::$app->user->identity->username ?></a>
+                    <?php } else{ ?>
+                        <a href="<?= Url::to(['/login']) ?>" class="pull-right"><i class="glyphicon glyphicon-log-in"></i> <?= Yii::t('easyii', 'Login') ?></a>
+                    <?php } ?>
                 </div>
             </div>
             <div class="main">
                 <div class="box sidebar">
-                    <?php foreach(Yii::$app->getModule('admin')->activeModules as $module) : ?>
-                        <a href="<?= Url::to(["/admin/$module->name"]) ?>" class="menu-item <?= ($moduleName == $module->name ? 'active' : '') ?>">
-                            <?php if($module->icon != '') : ?>
-                                <i class="glyphicon glyphicon-<?= $module->icon ?>"></i>
-                            <?php endif; ?>
-                            <?= $module->title ?>
-                            <?php if($module->notice > 0) : ?>
-                                <span class="badge"><?= $module->notice ?></span>
-                            <?php endif; ?>
-                        </a>
-                    <?php endforeach; ?>
-                    <a href="<?= Url::to(['/admin/settings']) ?>" class="menu-item <?= ($moduleName == 'admin' && $this->context->id == 'settings') ? 'active' :'' ?>">
-                        <i class="glyphicon glyphicon-cog"></i>
-                        <?= Yii::t('easyii', 'Settings') ?>
-                    </a>
-                    <?php if(IS_ROOT) : ?>
+                    <?php if(Yii::$app->user->identity->isSuperadmin) : ?>
                         <a href="<?= Url::to(['/admin/modules']) ?>" class="menu-item">
                             <i class="glyphicon glyphicon-folder-close"></i>
-                            <?= Yii::t('easyii', 'Modules') ?>
+                            <?= Yii::t('easyii', 'Module CMS') ?>
                         </a>
                         <a href="<?= Url::to(['/user/admin/']) ?>" class="menu-item <?= ($moduleName == 'admin' && $this->context->id == 'admins') ? 'active' :'' ?>">
                             <i class="glyphicon glyphicon-user"></i>
-                            <?= Yii::t('easyii', 'Module USERS') ?>
+                            <?= Yii::t('easyii', 'Users') ?>
                         </a>
-                        <a href="<?= Url::to(['/admin/system']) ?>" class="menu-item <?= ($moduleName == 'admin' && $this->context->id == 'system') ? 'active' :'' ?>">
-                            <i class="glyphicon glyphicon-hdd"></i>
-                            <?= Yii::t('easyii', 'System') ?>
+                        <a href="<?= Url::to(['/user/role']) ?>" class="menu-item">
+                            <i class="glyphicon glyphicon-knight"></i>
+                            <?= Yii::t('easyii', 'Role') ?>
                         </a>
-                        <a href="<?= Url::to(['/admin/logs']) ?>" class="menu-item <?= ($moduleName == 'admin' && $this->context->id == 'logs') ? 'active' :'' ?>">
-                            <i class="glyphicon glyphicon-align-justify"></i>
-                            <?= Yii::t('easyii', 'Logs') ?>
+                        <a href="<?= Url::to(['/user/permission']) ?>" class="menu-item">
+                            <i class="glyphicon glyphicon-briefcase"></i>
+                            <?= Yii::t('easyii', 'Permissions') ?>
                         </a>
                     <?php endif; ?>
                 </div>
