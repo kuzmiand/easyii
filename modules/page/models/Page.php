@@ -4,8 +4,13 @@ namespace yii\easyii\modules\page\models;
 use Yii;
 use yii\easyii\behaviors\SeoBehavior;
 
+use kuzmiand\behaviors\multilanguage\MultiLanguageBehavior;
+use kuzmiand\behaviors\multilanguage\MultiLanguageTrait;
+
 class Page extends \yii\easyii\components\ActiveRecord
 {
+    use MultiLanguageTrait;
+
     public static function tableName()
     {
         return 'easyii_pages';
@@ -36,6 +41,16 @@ class Page extends \yii\easyii\components\ActiveRecord
     {
         return [
             'seoBehavior' => SeoBehavior::className(),
+            'mlBehavior' => [
+                'class' => MultiLanguageBehavior::className(),
+                'mlConfig' => [
+                    'db_table' => 'translations_with_string',
+                    'attributes' => ['title', 'text'],
+                    'admin_routes' => [
+                        'admin/*'
+                    ],
+                ],
+            ],
         ];
     }
 }

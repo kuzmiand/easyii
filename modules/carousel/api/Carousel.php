@@ -25,13 +25,19 @@ class Carousel extends API
     {
         parent::init();
 
-        $this->_items = Data::cache(CarouselModel::CACHE_KEY, 3600, function(){
+        /*$this->_items = Data::cache(CarouselModel::CACHE_KEY, 3600, function(){
             $items = [];
             foreach(CarouselModel::find()->status(CarouselModel::STATUS_ON)->sort()->all() as $item){
                 $items[] = new CarouselObject($item);
             }
             return $items;
-        });
+        });*/
+
+        $items = [];
+        foreach(CarouselModel::find()->status(CarouselModel::STATUS_ON)->sort()->all() as $item){
+            $items[] = new CarouselObject($item);
+        }
+        $this->_items = $items;
     }
 
     public function api_widget($width, $height, $clientOptions = [])

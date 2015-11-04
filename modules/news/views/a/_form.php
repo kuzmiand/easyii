@@ -8,13 +8,18 @@ use yii\widgets\ActiveForm;
 use yii\easyii\widgets\Redactor;
 use yii\easyii\widgets\SeoForm;
 
+use kuzmiand\behaviors\multilanguage\input_widget\MultiLanguageActiveField;
+use yii\easyii\widgets\RedactorMultiLanguage\RedactorMultiLanguageInput;
+
 $module = $this->context->module->id;
 ?>
 <?php $form = ActiveForm::begin([
     'enableAjaxValidation' => true,
     'options' => ['enctype' => 'multipart/form-data', 'class' => 'model-form']
 ]); ?>
-<?= $form->field($model, 'title') ?>
+
+<?= $form->field($model, 'title')->widget(MultiLanguageActiveField::className()) ?>
+
 <?php if($this->context->module->settings['enableThumb']) : ?>
     <?php if($model->image) : ?>
         <img src="<?= Image::thumb($model->image, 240) ?>">
@@ -22,17 +27,26 @@ $module = $this->context->module->id;
     <?php endif; ?>
     <?= $form->field($model, 'image')->fileInput() ?>
 <?php endif; ?>
+
 <?php if($this->context->module->settings['enableShort']) : ?>
-    <?= $form->field($model, 'short')->textarea() ?>
+    <?= $form->field($model, 'short')->textarea()->widget(MultiLanguageActiveField::className(), ['inputType' => 'textArea']) ?>
 <?php endif; ?>
-<?= $form->field($model, 'text')->widget(Redactor::className(),[
+
+<?/*= $form->field($model, 'text')->widget(Redactor::className(),[
     'options' => [
         'minHeight' => 400,
         'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
         'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
         'plugins' => ['fullscreen']
     ]
-]) ?>
+]) */?>
+
+<?= RedactorMultiLanguageInput::widget($model, 'text', ['options' => [
+    'minHeight' => 400,
+    'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+    'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+    'plugins' => ['fullscreen']
+]]); ?>
 
 <?= $form->field($model, 'time')->widget(DateTimePicker::className()); ?>
 

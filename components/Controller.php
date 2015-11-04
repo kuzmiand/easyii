@@ -5,6 +5,8 @@ use Yii;
 use yii\easyii\models;
 use yii\helpers\Url;
 
+use kuzmiand\behaviors\multilanguage\MultiLanguageHelper;
+
 /**
  * Base easyii controller component
  * @package yii\easyii\components
@@ -17,6 +19,7 @@ class Controller extends \yii\web\Controller
     
     public function init()
     {
+        MultiLanguageHelper::catchLanguage();
         parent::init();
         $this->layout = Yii::$app->getModule('admin')->controllerLayout;
     }

@@ -1,5 +1,7 @@
 <?php
 
+use kuzmiand\behaviors\multilanguage\MultiLanguageUrlManager;
+
 return [
     'modules' => [
         'admin' => [
@@ -8,11 +10,19 @@ return [
     ],
     'components' => [
         'urlManager' => [
+            'class'=>MultiLanguageUrlManager::className(),
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                 'admin/<controller:\w+>/<action:[\w-]+>/<id:\d+>' => 'admin/<controller>/<action>',
-                'admin/<module:\w+>/<controller:\w+>/<action:[\w-]+>/<id:\d+>' => 'admin/<module>/<controller>/<action>'
+                'admin/<module:\w+>/<controller:\w+>/<action:[\w-]+>/<id:\d+>' => 'admin/<module>/<controller>/<action>',
+
+                '<_c:[\w \-]+>/<id:\d+>'=>'<_c>/view',
+                '<_c:[\w \-]+>/<_a:[\w \-]+>/<id:\d+>'=>'<_c>/<_a>',
+                '<_c:[\w \-]+>/<_a:[\w \-]+>'=>'<_c>/<_a>',
+
+                '<_m:[\w \-]+>/<_c:[\w \-]+>/<_a:[\w \-]+>'=>'<_m>/<_c>/<_a>',
+                '<_m:[\w \-]+>/<_c:[\w \-]+>/<_a:[\w \-]+>/<id:\d+>'=>'<_m>/<_c>/<_a>',
             ],
          ],
         /*'user' => [
@@ -25,7 +35,7 @@ return [
             'translations' => [
                 'easyii' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    'sourceLanguage' => 'en-US',
+                    'sourceLanguage' => 'en',
                     'basePath' => '@easyii/messages',
                     'fileMap' => [
                         'easyii' => 'admin.php',
@@ -37,5 +47,16 @@ return [
             'sizeFormatBase' => 1000
         ],
     ],
-    'bootstrap' => ['admin']
+    'bootstrap' => ['admin'],
+    'params' => [
+        'mlConfig'=>[
+            'default_language'=>'en',
+            'languages'=>[
+                'en'=>'En',
+                'ru'=>'Ru',
+                'it'=>'It',
+                'sp'=>'Sp',
+            ],
+        ],
+    ]
 ];

@@ -98,6 +98,30 @@ class News extends \yii\easyii\components\API
         }
     }
 
+    public function api_last_items($limit = 1, $not_id = null)
+    {
+        if($limit === 1 && $this->_last){
+            return $this->_last;
+        }
+
+        $with = ['seo'];
+        if(Yii::$app->getModule('admin')->activeModules['news']->settings['enableTags']){
+            $with[] = 'tags';
+        }
+
+        $result = [];
+        foreach(NewsModel::find()->with($with)->status(NewsModel::STATUS_ON)->andWhere('news_id != :id', [':id' => $not_id])->sortDate()->limit($limit)->all() as $item){
+            $result[] = new NewsObject($item);
+        }
+
+        if($limit > 1){
+            return $result;
+        } else {
+            $this->_last = count($result) ? $result[0] : null;
+            return $this->_last;
+        }
+    }
+
     public function api_plugin($options = [])
     {
         Fancybox::widget([
@@ -113,7 +137,7 @@ class News extends \yii\easyii\components\API
 
     public function api_pages()
     {
-        return $this->_adp ? LinkPager::widget(['pagination' => $this->_adp->pagination]) : '';
+        return $this->_adp ? LinkPager::widget(['pagination' => $this->_adp->pagination, 'firstPageLabel'=>'', 'lastPageLabel'=>'', 'nextPageLabel'=>'', 'prevPageLabel'=>'']) : '';
     }
 
     private function findNews($id_slug)

@@ -22,9 +22,11 @@ class Text extends API
     {
         parent::init();
 
-        $this->_texts = Data::cache(TextModel::CACHE_KEY, 3600, function(){
-            return TextModel::find()->asArray()->all();
-        });
+        /*$this->_texts = Data::cache(TextModel::CACHE_KEY, 3600, function(){
+            return TextModel::find()->all();
+        });*/
+        $this->_texts = TextModel::find()->all();
+
     }
 
     public function api_get($id_slug)
@@ -32,13 +34,14 @@ class Text extends API
         if(($text = $this->findText($id_slug)) === null){
             return $this->notFound($id_slug);
         }
-        return LIVE_EDIT ? API::liveEdit($text['text'], Url::to(['/admin/text/a/edit/', 'id' => $text['text_id']])) : $text['text'];
+        return LIVE_EDIT ? API::liveEdit($text->text, Url::to(['/admin/text/a/edit/', 'id' => $text->text_id])) : $text->text;
     }
 
     private function findText($id_slug)
     {
         foreach ($this->_texts as $item) {
-            if($item['slug'] == $id_slug || $item['text_id'] == $id_slug){
+            //$item->c
+            if($item->slug == $id_slug || $item->text_id == $id_slug){
                 return $item;
             }
         }

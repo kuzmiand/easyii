@@ -8,8 +8,13 @@ use yii\easyii\behaviors\Taggable;
 use yii\easyii\models\Photo;
 use yii\helpers\StringHelper;
 
+use kuzmiand\behaviors\multilanguage\MultiLanguageBehavior;
+use kuzmiand\behaviors\multilanguage\MultiLanguageTrait;
+
 class News extends \yii\easyii\components\ActiveRecord
 {
+    use MultiLanguageTrait;
+
     const STATUS_OFF = 0;
     const STATUS_ON = 1;
 
@@ -56,6 +61,16 @@ class News extends \yii\easyii\components\ActiveRecord
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'title',
                 'ensureUnique' => true
+            ],
+            'mlBehavior' => [
+                'class' => MultiLanguageBehavior::className(),
+                'mlConfig' => [
+                    'db_table' => 'translations_with_string',
+                    'attributes' => ['title', 'short', 'text'],
+                    'admin_routes' => [
+                        'admin/*'
+                    ],
+                ],
             ],
         ];
     }

@@ -6,6 +6,8 @@ use yii\easyii\modules\catalog;
 use yii\easyii\modules\shopcart;
 use yii\easyii\modules\article;
 use yii\easyii\modules\carousel\models\Carousel;
+use yii\easyii\modules\carousels\models\Carousel as Carousels;
+use yii\easyii\modules\carousels\models\ItemCarousel;
 use yii\easyii\modules\faq\models\Faq;
 use yii\easyii\modules\feedback\models\Feedback;
 use yii\easyii\modules\file\models\File;
@@ -16,6 +18,8 @@ use yii\easyii\modules\page\models\Page;
 use yii\easyii\modules\subscribe\models\Subscriber;
 use yii\easyii\modules\subscribe\models\History;
 use yii\easyii\modules\text\models\Text;
+use yii\easyii\modules\menu\models\Menu;
+use yii\easyii\modules\menu\models\MenuItem;
 
 class m000000_000000_install extends \yii\db\Migration
 {
@@ -34,6 +38,22 @@ class m000000_000000_install extends \yii\db\Migration
             'access_token' => Schema::TYPE_STRING . '(128) DEFAULT NULL'
         ], $this->engine);
         $this->createIndex('access_token', models\Admin::tableName(), 'access_token', true);
+
+        //MENU
+        $this->createTable(Menu::tableName(), [
+            'menu_id' => Schema::TYPE_PK,
+            'name' => Schema::TYPE_STRING
+        ]);
+
+        $this->createTable(MenuItem::tableName(), [
+            'menu_item_id' => Schema::TYPE_PK,
+            'menu_id' => Schema::TYPE_INTEGER,
+            'parent_id' => Schema::TYPE_INTEGER,
+            'order_num' => Schema::TYPE_INTEGER,
+            'label' => Schema::TYPE_STRING,
+            'path' => Schema::TYPE_STRING,
+            'status' => Schema::TYPE_BOOLEAN . " DEFAULT '0'",
+        ]);
 
         //LOGINFORM
         $this->createTable(models\LoginForm::tableName(), [
@@ -362,5 +382,7 @@ class m000000_000000_install extends \yii\db\Migration
         $this->dropTable(Subscriber::tableName());
         $this->dropTable(History::tableName());
         $this->dropTable(Text::tableName());
+        $this->dropTable(Menu::tableName());
+        $this->dropTable(MenuItem::tableName());
     }
 }
