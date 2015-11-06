@@ -26,6 +26,22 @@ class PageObject extends \yii\easyii\components\ApiObject
         }
     }
 
+    public function getText_1(){
+        if($this->model->isNewRecord){
+            return $this->createLink;
+        } else {
+            return LIVE_EDIT ? API::liveEdit($this->model->text_1, $this->editLink, 'div') : $this->model->text_1;
+        }
+    }
+
+    public function getText_2(){
+        if($this->model->isNewRecord){
+            return $this->createLink;
+        } else {
+            return LIVE_EDIT ? API::liveEdit($this->model->text_2, $this->editLink, 'div') : $this->model->text_2;
+        }
+    }
+
     public function getEditLink(){
         return Url::to(['/admin/page/a/edit/', 'id' => $this->id]);
     }

@@ -4,7 +4,8 @@ namespace yii\easyii\modules\carousels\api;
 use Yii;
 use yii\easyii\components\API;
 use yii\easyii\helpers\Data;
-use yii\easyii\modules\carousels\models\Carousels as CarouselsModel;
+use yii\easyii\modules\carousels\models\Carousel as CarouselsModel;
+use yii\easyii\modules\carousels\models\ItemCarousel;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -15,11 +16,13 @@ use yii\helpers\Url;
  * @method static array items() array of all Carousels items as CarouselsObject objects. Useful to create carousels on other widgets.
  */
 
-class Carousels extends API
+class Carousel extends API
 {
     public $clientOptions = ['interval' => 5000];
 
     private $_items = [];
+
+    private $_carousel_items = [];
 
     public function init()
     {
@@ -34,8 +37,8 @@ class Carousels extends API
         });*/
 
         $items = [];
-        foreach(CarouselsModel::find()->status(CarouselsModel::STATUS_ON)->sort()->all() as $item){
-            $items[] = new CarouselsObject($item);
+        foreach(CarouselsModel::find()->status(CarouselsModel::STATUS_ON)->all() as $item){
+            $items[] = new CarouselObject($item);
         }
         $this->_items = $items;
     }
@@ -79,5 +82,25 @@ class Carousels extends API
     public function api_items()
     {
         return $this->_items;
+    }
+
+    public function api_carousel_items($slug_carousel)
+    {
+        $carousel = CarouselsModel::find()->where(['slug'=>$slug_carousel])->one();
+
+        if($carousel)
+        {
+            if(!$this->_carousel_items){
+
+                $this->_carousel_items = [];
+
+                foreach(ItemCarousel::find()->status(ItemCarousel::STATUS_ON)->where(['carousel_id'=>$carousel->carousel_id])->orderBy(['order_num'=> SORT_DESC])->all() as $item){
+                    $this->_carousel_items[] = $item;
+                }
+            }
+
+            return $this->_carousel_items;
+
+        }
     }
 }

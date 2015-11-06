@@ -118,6 +118,31 @@ class Article extends \yii\easyii\components\API
         }
     }
 
+    public function api_last_items($limit = 1, $not_id = null)
+    {
+        if($limit === 1 && $this->_last){
+            return $this->_last;
+        }
+
+        $with = ['seo'];
+        if(Yii::$app->getModule('admin')->activeModules['article']->settings['enableTags']){
+            $with[] = 'tags';
+        }
+
+        $result = [];
+
+        foreach(Item::find()->with($with)->status(Item::STATUS_ON)->andWhere('item_id != :id', [':id' => $not_id])->sortDate()->limit($limit)->all() as $item){
+            $result[] = new ArticleObject($item);
+        }
+
+        if($limit > 1){
+            return $result;
+        } else {
+            $this->_last = count($result) ? $result[0] : null;
+            return $this->_last;
+        }
+    }
+
     public function api_get($id_slug)
     {
         if(!isset($this->_item[$id_slug])) {

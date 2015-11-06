@@ -296,6 +296,8 @@ class m000000_000000_install extends \yii\db\Migration
             'page_id' => 'pk',
             'title' => Schema::TYPE_STRING . '(128) NOT NULL',
             'text' => Schema::TYPE_TEXT . ' NOT NULL',
+            'text_1' => Schema::TYPE_TEXT . ' NOT NULL',
+            'text_2' => Schema::TYPE_TEXT . ' NOT NULL',
             'slug' => Schema::TYPE_STRING . '(128) DEFAULT NULL'
         ], $this->engine);
         $this->createIndex('slug', Page::tableName(), 'slug', true);

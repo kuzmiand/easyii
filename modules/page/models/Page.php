@@ -20,7 +20,7 @@ class Page extends \yii\easyii\components\ActiveRecord
     {
         return [
             ['title', 'required'],
-            [['title', 'text'], 'trim'],
+            [['title', 'text', 'text_1', 'text_2'], 'trim'],
             ['title', 'string', 'max' => 128],
             ['slug', 'match', 'pattern' => self::$SLUG_PATTERN, 'message' => Yii::t('easyii', 'Slug can contain only 0-9, a-z and "-" characters (max: 128).')],
             ['slug', 'default', 'value' => null],
@@ -33,6 +33,8 @@ class Page extends \yii\easyii\components\ActiveRecord
         return [
             'title' => Yii::t('easyii', 'Title'),
             'text' => Yii::t('easyii', 'Text'),
+            'text_1' => Yii::t('easyii', 'Text_1'),
+            'text_2' => Yii::t('easyii', 'Text_2'),
             'slug' => Yii::t('easyii', 'Slug'),
         ];
     }
@@ -45,7 +47,7 @@ class Page extends \yii\easyii\components\ActiveRecord
                 'class' => MultiLanguageBehavior::className(),
                 'mlConfig' => [
                     'db_table' => 'translations_with_string',
-                    'attributes' => ['title', 'text'],
+                    'attributes' => ['title', 'text', 'text_1', 'text_2'],
                     'admin_routes' => [
                         'admin/*'
                     ],

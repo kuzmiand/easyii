@@ -24,12 +24,32 @@ use yii\easyii\widgets\RedactorMultiLanguage\RedactorMultiLanguageInput;
     ]
 ]) */?>
 
-<?= RedactorMultiLanguageInput::widget($model, 'text', ['options' => [
-    'minHeight' => 400,
-    'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
-    'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
-    'plugins' => ['fullscreen']
-]]); ?>
+<div style="margin: 20px 0">
+    <?= RedactorMultiLanguageInput::widget($model, 'text', ['options' => [
+        'minHeight' => 400,
+        'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+        'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+        'plugins' => ['fullscreen']
+    ]]); ?>
+</div>
+
+<div style="margin: 20px 0">
+    <?= RedactorMultiLanguageInput::widget($model, 'text_1', ['options' => [
+        'minHeight' => 400,
+        'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+        'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+        'plugins' => ['fullscreen']
+    ]]); ?>
+</div>
+
+<div style="margin: 20px 0">
+    <?= RedactorMultiLanguageInput::widget($model, 'text_2', ['options' => [
+        'minHeight' => 400,
+        'imageUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+        'fileUpload' => Url::to(['/admin/redactor/upload', 'dir' => 'news']),
+        'plugins' => ['fullscreen']
+    ]]); ?>
+</div>
 
 <?php if(IS_ROOT) : ?>
     <?= $form->field($model, 'slug') ?>

@@ -65,10 +65,10 @@ class Feedback extends \yii\easyii\components\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'email' => 'E-mail',
-            'name' => Yii::t('easyii', 'Name'),
+            'email' => Yii::t('all', 'Your e-mail'),
+            'name' => Yii::t('all', 'Name'),
             'title' => Yii::t('easyii', 'Title'),
-            'text' => Yii::t('easyii', 'Text'),
+            'text' => Yii::t('all', 'Message text'),
             'answer_subject' => Yii::t('easyii/feedback', 'Subject'),
             'answer_text' => Yii::t('easyii', 'Text'),
             'phone' => Yii::t('easyii/feedback', 'Phone'),

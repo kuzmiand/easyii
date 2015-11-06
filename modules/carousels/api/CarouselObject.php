@@ -4,7 +4,7 @@ namespace yii\easyii\modules\carousels\api;
 use yii\easyii\components\API;
 use yii\helpers\Url;
 
-class CarouselsObject extends \yii\easyii\components\ApiObject
+class CarouselObject extends \yii\easyii\components\ApiObject
 {
     public $image;
     public $link;

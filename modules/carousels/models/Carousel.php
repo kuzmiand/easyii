@@ -50,7 +50,7 @@ class Carousel extends \yii\easyii\components\ActiveRecord
 
     public function getItems()
     {
-        return $this->hasMany(ItemCarousel::className(), ['carousel_id' => 'carousel_id']);
+        return $this->hasMany(ItemCarousel::className(), ['carousel_id' => 'carousel_id'])->orderBy(['order_num' => SORT_ASC]);
     }
 
     public function afterDelete()
