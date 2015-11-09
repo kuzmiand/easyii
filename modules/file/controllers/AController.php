@@ -36,6 +36,7 @@ class AController extends Controller
     public function actionCreate($slug = null)
     {
         $model = new File;
+        $model->loadTranslations_custom();
 
         if ($model->load(Yii::$app->request->post())) {
             if(Yii::$app->request->isAjax){
@@ -43,7 +44,7 @@ class AController extends Controller
                 return ActiveForm::validate($model);
             }
             else{
-                if(($fileInstanse = UploadedFile::getInstance($model, 'file')))
+                /*if(($fileInstanse = UploadedFile::getInstance($model, 'file')))
                 {
                     $model->file = $fileInstanse;
                     if($model->validate(['file'])){
@@ -64,8 +65,35 @@ class AController extends Controller
                 }
                 else {
                     $this->flash('error', Yii::t('yii', '{attribute} cannot be blank.', ['attribute' => $model->getAttributeLabel('file')]));
+                }*/
+
+                //return $this->refresh();
+
+                foreach(array_keys(Yii::$app->params['mlConfig']['languages']) as $lang) {
+
+                    $file_lang = ($lang != Yii::$app->params['mlConfig']['default_language']) ? 'file_' . $lang : 'file';
+                    if(($fileInstanse = UploadedFile::getInstance($model, $file_lang)))
+                    {
+                        $model->{$file_lang} = $fileInstanse;
+                        if($model->validate([$file_lang])){
+                            $model->{$file_lang} = Upload::file($fileInstanse, 'files', false);
+                        }
+                        else {
+                            $this->flash('error', Yii::t('easyii/file', 'File error. {0}', $model->formatErrors()));
+                        }
+                    }
                 }
-                return $this->refresh();
+
+                if($model->save()){
+                    $this->flash('success', Yii::t('easyii/cooperation', 'Cooperation created'));
+                    return $this->redirect(['/admin/'.$this->module->id]);
+                }
+                else{
+                    $this->flash('error', Yii::t('easyii', 'Create error. {0}', $model->formatErrors()));
+                    return $this->refresh();
+                }
+
+
             }
         }
         else {
@@ -80,6 +108,10 @@ class AController extends Controller
     public function actionEdit($id)
     {
         $model = File::findOne($id);
+        $model->loadTranslations_custom();
+        $file_ru = $model->file_ru;
+        $file_it = $model->file_it;
+        $file_sp = $model->file_sp;
 
         if($model === null){
             $this->flash('error', Yii::t('easyii', 'Not found'));
@@ -92,7 +124,7 @@ class AController extends Controller
                 return ActiveForm::validate($model);
             }
             else{
-                if(($fileInstanse = UploadedFile::getInstance($model, 'file')))
+                /*if(($fileInstanse = UploadedFile::getInstance($model, 'file')))
                 {
                     $model->file = $fileInstanse;
                     if($model->validate(['file'])){
@@ -113,6 +145,32 @@ class AController extends Controller
                     $this->flash('success', Yii::t('easyii/file', 'File updated'));
                 }
                 else {
+                    $this->flash('error', Yii::t('easyii', 'Update error. {0}', $model->formatErrors()));
+                }
+                return $this->refresh();*/
+
+                foreach(array_keys(Yii::$app->params['mlConfig']['languages']) as $lang) {
+
+                    $file_lang = ($lang != Yii::$app->params['mlConfig']['default_language']) ? 'file_' . $lang : 'file';
+                    if (($fileInstanse = UploadedFile::getInstance($model, $file_lang))) {
+                        $model->{$file_lang} = $fileInstanse;
+                        if ($model->validate($file_lang)) {
+                            $model->{$file_lang} = Upload::file($fileInstanse, 'files', false);
+                            $model->size = $fileInstanse->size;
+                            $model->time = time();
+                        } else {
+                            $this->flash('error', Yii::t('easyii/file', 'File error. {0}', $model->formatErrors()));
+                            return $this->refresh();
+                        }
+                    } else {
+                        $model->{$file_lang} = ($file_lang == 'file') ? $model->oldAttributes['file'] : ${'file_'.$lang};
+                    }
+                }
+
+                if($model->save()){
+                    $this->flash('success', Yii::t('easyii/cooperation', 'Cooperation updated'));
+                }
+                else{
                     $this->flash('error', Yii::t('easyii', 'Update error. {0}', $model->formatErrors()));
                 }
                 return $this->refresh();

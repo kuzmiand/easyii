@@ -6,8 +6,13 @@ use yii\behaviors\SluggableBehavior;
 use yii\easyii\behaviors\SeoBehavior;
 use yii\easyii\behaviors\SortableModel;
 
+use kuzmiand\behaviors\multilanguage\MultiLanguageBehavior;
+use kuzmiand\behaviors\multilanguage\MultiLanguageTrait;
+
 class File extends \yii\easyii\components\ActiveRecord
 {
+    use MultiLanguageTrait;
+
     public static function tableName()
     {
         return 'easyii_files';
@@ -16,7 +21,7 @@ class File extends \yii\easyii\components\ActiveRecord
     public function rules()
     {
         return [
-            ['file', 'file'],
+            [['file', 'file_ru', 'file_it', 'file_sp'], 'file'],
             ['title', 'required'],
             ['title', 'string', 'max' => 128],
             ['title', 'trim'],
@@ -45,7 +50,17 @@ class File extends \yii\easyii\components\ActiveRecord
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'title',
                 'ensureUnique' => true
-            ]
+            ],
+            'mlBehavior' => [
+                'class'    => MultiLanguageBehavior::className(),
+                'mlConfig' => [
+                    'db_table'         => 'translations_with_string',
+                    'attributes'       => ['title', 'file', 'image'],
+                    'admin_routes' => [
+                        'admin/*',
+                    ]
+                ],
+            ],
         ];
     }
 
@@ -65,6 +80,11 @@ class File extends \yii\easyii\components\ActiveRecord
     {
         parent::afterDelete();
 
-        @unlink(Yii::getAlias('@webroot').$this->file);
+        //@unlink(Yii::getAlias('@webroot').$this->file);
+
+        foreach(array_keys(Yii::$app->params['mlConfig']['languages']) as $lang) {
+            $file_lang = ($lang != Yii::$app->params['mlConfig']['default_language']) ? 'file_' . $lang : 'file';
+            @unlink(Yii::getAlias('@webroot').$this->{$file_lang});
+        }
     }
 }
