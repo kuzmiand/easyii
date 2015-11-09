@@ -20,6 +20,10 @@ class FileObject extends \yii\easyii\components\ApiObject
         return Url::to(['/admin/file/download', 'id' => $this->id]);
     }
 
+    public function getMultiFile(){
+        return $this->model->file;
+    }
+
     public function getLink(){
         return Html::a($this->title, $this->file, ['target' => '_blank']);
     }
